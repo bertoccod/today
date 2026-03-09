@@ -1,0 +1,151 @@
+#main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+}
+
+#desktop {
+  display: none;
+}
+
+#logo_img {
+  width: 35vw;
+  filter: drop-shadow(0 0 8px white);
+  max-width: 220px
+}
+
+#insert {
+  background: var(--card);
+  backdrop-filter: blur(30px);
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.26);
+  padding: 2rem;
+  border-radius: 30px;
+}
+
+#inserimento {
+  display: flex;
+  flex-direction: column;
+}
+
+#inserimento input[type="text"],
+#inserimento input[type="date"] {
+  background-color: var(--bg-page);
+  border: 1px solid var(--accent);
+  color: var(--text-day);
+  padding: 10px;
+  margin-bottom: 1rem;
+  font-family: var(--font-main);
+  outline: none;
+  transition: border 0.3s;
+  border-radius: 4px;
+}
+
+#inserimento input:focus {
+  border: 1px solid var(--accent);
+}
+
+#lb_name,
+#lb_nascita {
+  font-family: var(--font-titles);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+  color: var(--text-title);
+}
+
+#sendform {
+  background-color: var(--accent) !important;
+  color: white !important;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 10px;
+}
+
+#sendform:hover {
+  opacity: 0.9;
+}
+
+#error {
+  margin: 0.5rem auto;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+#disclaimer {
+  width: 60%;
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+#splash {
+  margin-top: 2rem;
+  width: 100%;
+  text-align: center;
+  align-items: center;
+  animation: fadein 0.8s ease-out;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#welcome {
+  font-family: var(--font-quotes);
+  font-size: 1.4rem;
+  transition: border 0.3s;
+  font-weight: 500;
+}
+
+.separator {
+  width: 70%;
+  margin: 18px auto 0;
+  height: 1px;
+  background: var(--accent);
+}
+
+@media screen and (min-width: 769px) {
+  body {
+    background: #f0f0f0;
+    /* Sfondo esterno grigio */
+    display: flex;
+    justify-content: center;
+  }
+
+  #main {
+    width: 30vw;
+    /* Larghezza tipo iPhone Pro Max */
+    height: 100vh;
+    position: relative;
+    background: white;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+  }
+
+  #logo_img {
+    width: 180px;
+  }
+
+  #desktop {
+    display: block;
+    width: 70%;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <title>Today - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="index.css">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="./assets/icon-192.png">
+</head>
+
+<body>
+  <div id="main">
+    <div id="desktop">
+      <span>
+        <b>"Prenditi un momento, ma sul palmo della tua mano."</b><br>
+        Today è nato per essere un piccolo rito quotidiano, veloce e personale. Su uno schermo così grande perde la sua magia. Apri l'indirizzo dal tuo smartphone per iniziare la giornata nel modo giusto.
+      </span>
+    </div>
+    <div id="logo">
+      <img id="logo_img" src="assets/logo.png" alt="Logo Today" />
+    </div>
+
+    <div id="insert" style="display: none;">
+      <form id="inserimento">
+        <label id="lb_name">Inserisci il tuo nome</label>
+        <input id="nome" type="text" />
+        <label id="lb_nascita">La tua data di nascita</label>
+        <input id="nato" type="date" />
+        <input type="button" id="sendform" value="Inserisci">
+        <label id="error"></label>
+      </form>
+    </div>
+
+    <div id="disclaimer" style="display: none;">
+      <p><b>Attenzione:</b><br>Eliminando la cache del browser potresti dover reinserire questi dati.</p>
+    </div>
+
+    <div id="splash" style="display: none;"></div>
+    
+  </div>
+    <script src="index.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // I tuoi dati di configurazione (li trovi nelle impostazioni del progetto Firebase)
+  const firebaseConfig = {
+      apiKey: "AIzaSyCboHhYcYQKR8MuB41r4d5QRqPpiT0_v5w",
+      authDomain: "today-7ee7d.firebaseapp.com",
+      projectId: "today-7ee7d",
+      storageBucket: "today-7ee7d.firebasestorage.app",
+      messagingSenderId: "628567408302",
+      appId: "1:628567408302:web:71598097228eb34fcf373f"
+    };
+
+  // Inizializza Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Rendiamo la funzione disponibile globalmente per il tuo pulsante
+  window.registraAccesso = async function(nome, data) {
+    try {
+      const docRef = await addDoc(collection(db, "accessi_utenti"), {
+        nome: nome,
+        compleanno: data,
+        creato_il: serverTimestamp()
+      });
+      console.log("Amico registrato con ID: ", docRef.id);
+    } catch (e) {
+      console.error("Errore durante la registrazione: ", e);
+    }
+  }
+</script>
+</body>
+
+</html>

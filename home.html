@@ -1,0 +1,159 @@
+<html>
+<head>
+  <title>Today</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="home.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="./assets/icon-192.png">
+</head>
+
+<body>
+  <div id="main">
+
+    <div id="topbar">
+      <img id="logo_img" src="assets/logo_orizz.png" alt="Logo Today" />
+    </div>
+
+    <div id="saluto">
+      <h1 id="buondi"></h1>
+    </div>
+
+    <div id="dataCircle" class="boxino">
+      <h2 id="dow"></h2>
+      <div id="circle">
+        <h1 id="circle_day"></h1>
+      </div>
+      <h2 id="meseanno"></h2>
+    </div>
+
+    <div class="boxino">
+      <div class="etichetta">
+        <h2>Meteo</h2>
+      </div>
+      <div id="meteo-box">
+        <div id="meteo_icon"></div>
+        <div id="meteo_contenuto" class="contenuto"></div>
+      </div>
+    </div>
+
+    <div class="boxino">
+      <div class="etichetta">
+        <h2>Giornata mondiale</h2>
+      </div>
+      <div id="ricorrenza_box"></div>
+    </div>
+
+    <div id="date" class="boxino">
+      <div class="etichetta">
+        <h2>Date le date</h2>
+      </div>
+      <div id="carosello_date">
+        <div id="freccia_prev" class="indicatore_scroll">
+          <i class="ph-bold ph-caret-left"></i>
+        </div>
+        <ul id="lista_date">
+          <li id="gg_vissuti"></li>
+          <li id="next_comple"></li>
+          <li id="gg_natale"></li>
+          <li id="gg_stagione"></li>
+          <li id="gg_next_stagione"></li>
+        </ul>
+        <div id="freccia_next" class="indicatore_scroll">
+          <i class="ph-bold ph-caret-right"></i>
+        </div>
+      </div>
+      <div id="anno_trascorso"></div>
+    </div>
+
+    <div class="boxino">
+      <div class="etichetta">
+        <h2>Santo del giorno</h2>
+      </div>
+      <div id="santo_box">
+        <div id="santo-icon">
+          <i class="ph-duotone ph-church"></i>
+        </div>
+        <div id="santo_contenuto" class="contenuto">
+          <span class="santo_principale" id="main_saint"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="effimero" class="boxino">
+      <div class="etichetta">
+        <h2>L'effimero</h2>
+      </div>
+      <div id="effimero_box">
+        <div id="effimero-icon">
+          <i class="ph-duotone ph-pen-nib-straight"></i>
+        </div>
+        <div id="effimero_contenuto" class="contenuto">
+          <p class="quote_text" id="testo_citaz"></p>
+          <p class="quote_author" id="autore_citaz"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="boxino">
+      <div class="etichetta">
+        <h2>Accadde oggi</h2>
+      </div>
+      <div id="evento-box">
+        <div id="evento-icon">
+          <i class="ph-duotone ph-clock-clockwise"></i>
+          <div id="evento_year"></div>
+        </div>
+        <div class="navigazione-evento">
+          <i class="ph ph-caret-left" id="freccia_prev_accadde"></i>
+          <div id="evento_contenuto"class="contenuto"></div>
+          <i class="ph ph-caret-right" id="freccia_next_accadde"></i>
+        </div>
+      </div>
+    </div>
+
+    <div id="pillola_sapere" class="boxino">
+      <div class="etichetta">
+        <h2>Pillola di conoscenza</h2>
+      </div>
+      <div id="pillola_box"></div>
+    </div>
+
+    <div id="topmusic" class="boxino">
+      <div class="etichetta">
+        <h2>In vetta alla classifica</h2>
+      </div>
+      <div id="topmusic_box"></div>
+    </div>
+
+    <div class="boxino">
+      <div class="etichetta">
+        <h2>Il capolavoro</h2>
+      </div>
+      <div id="capolavoro_box"></div>
+    </div>
+
+    <div class="boxino" id="fotodelgiorno">
+      <div class="etichetta">
+        <h2>La foto del giorno</h2>
+      </div>
+      <div id="fotografia_box"></div>
+    </div>
+    
+    <!--
+    <div id="compleanno" class="boxino">
+      <h2>I NATI DI OGGI</h2>
+    </div>
+    -->
+
+  </div>
+  <script type="module" src="home.js"></script>
+</body>
+
+</html>

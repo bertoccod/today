@@ -1,0 +1,435 @@
+#main {
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rem;
+}
+
+#topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 1.2rem;
+  z-index: 10;
+}
+
+#logo_img {
+  height: 50px;
+  width: auto;
+  filter: drop-shadow(0 0 6px white);
+}
+
+/* SALUTO INIZIALE*/ 
+#saluto{
+  text-align: center;
+  margin-top:2rem;
+}
+
+/* DATA DI OGGI CENTRALE */
+#dataCircle{ 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 2rem 0;
+}
+
+#circle{
+    border: 10px solid var(--accent);
+    padding: 1rem;
+    width:40vw;
+    height: 40vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+#circle h1{
+    font-size: 7rem;
+    color: var(--accent);
+}
+
+/* METEO */
+#meteo-box {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    gap: 1rem;
+    align-items: center;
+    padding: 0px!important;
+}
+#meteo_contenuto {
+    display: flex;
+    flex-direction: column;
+    gap:0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+#meteo_contenuto i{
+    font-size: 1rem;
+    color: var(--accent);
+}
+#temp-hot{
+    color: red!important;
+}
+
+/* RICORRENZA */
+#ricorrenza_box span{
+    font-family: var(--font-quotes);
+    font-size: 1rem;
+}
+
+/* DATE */
+#carosello_date {
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    position: relative;
+    display: block;
+}
+#lista_date{
+    list-style: none;
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 0 20px 20px 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap:15px;
+}
+#lista_date::after {
+    content: "";
+    flex: 0 0 20px; 
+}
+
+#lista_date::-webkit-scrollbar {
+    height: 6px;
+}
+#lista_date::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    margin: 0 40px;
+}
+
+#lista_date::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#lista_date li {
+  flex: 0 0 85%;               /* Impedisce agli elementi di rimpicciolirsi */
+  width: 80%;                 /* Larghezza fissa degli elementi */
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  margin-right: 1rem;
+}
+
+.giorni_box {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    gap: 1.5rem;
+    align-items: center;
+    width: 100%;
+    margin-left: 1rem;
+}
+.contenuto span{
+    font-size: 1rem;
+}
+.item-header{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 10px;
+}
+.item-header span{
+    margin-left: 0.5rem;
+}
+.progress-container {
+    width: 100%;
+    background: rgba(0,0,0,0.05);
+    height: 6px;
+    border-radius: 10px;
+    margin-top: 8px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #4ba853;;
+}
+.indicatore_scroll {
+    position: absolute;
+    top: 75%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 25px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(5px);
+    border-radius: 50%;   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor:pointer;
+    pointer-events: auto;
+    color: var(--accent);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#freccia_prev {left: 10px;}
+#freccia_next {right: 10px; left: auto;}
+.indicatore_scroll:active{
+    scale:0.9;
+}
+
+
+/* SANTI DEL GIORNO*/
+#santo_box {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    gap: 1rem;
+    align-items: center;
+    padding: 0px!important;
+}
+#santo-icon{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.santo_principale{
+    font-family: var(--font-quotes);
+    font-size: 1.3rem!important;
+    display: block;
+    margin-bottom: 1rem;
+}
+.santi-secondari{
+    font-size: 0.75rem!important ;
+}
+
+/* EFFIMERO */
+#effimero_box {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0px!important;
+}
+#effimero-icon{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.quote_text{
+    font-family: var(--font-quotes);
+    font-size:1rem;
+}
+
+/* ACCADDE OGGI */
+
+#evento-icon{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#evento-box {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    gap: 1rem;
+    align-items: center;
+}
+.navigazione-evento {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navigazione-evento i {
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+    font-size: 1.2rem;
+    color: var(--accent-color);
+}
+
+.navigazione-evento i:hover {
+    opacity: 1;
+}
+
+#evento_contenuto {
+    flex: 1; /* Il testo occupa tutto lo spazio tra le frecce */
+    min-height: 7rem!important; /* Evita che il box saltelli se il testo è corto */
+    display: flex;
+    align-items: center;
+}
+
+/* PILLOLA DI SAPERE */
+#pillola_box{
+    display: flex;
+    flex-direction: column;
+    margin-top: 0rem;
+    align-items: center;
+}
+#pillola_box img{
+    width: 100%;
+    border-radius: 10px;
+}
+#pillola_box a{
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1rem;
+    color: var(--accent);
+    margin: 0.5rem auto;
+}
+
+/* DISCO DEL GIORNO */
+#topmusic_box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#topmusic_box img{
+    width: 95%;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+}
+#artista {
+    font-family: var(--font-quotes);
+    font-size: 1.2rem;
+}
+#topmusic_box span{
+    margin: 0.2rem auto;
+}
+
+/* IL CAPOLAVORO */
+#capolavoro_box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#capolavoro_box img{
+    width: 95%;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+}
+
+#capolavoro_box span{
+    margin: 0.2rem auto;
+}
+
+
+/*LA FOTO DEL GIORNO */
+#fotografia_box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#fotografia_box img{
+    width: 95%;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+}
+
+#fotografia_box span{
+    margin: 0.2rem auto;
+}
+#fotodelgiorno{
+    margin-bottom: 4rem;
+}
+
+
+/* GIGANTE DEL GIORNO */
+
+#compleanno{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#compleanno ul {
+    list-style: none;
+    display: flex;
+    overflow-x: auto;
+    width: 100%; /* Occupa tutta la larghezza del contenitore */
+    gap: 20px;   /* Spazio tra le card */
+    padding: 20px 0;
+    scrollbar-width: none; 
+    scroll-snap-type: x mandatory;
+}
+
+#compleanno ul::-webkit-scrollbar {
+    display: none; /* Nasconde scrollbar su Chrome/Safari */
+}
+
+#compleanno ul li {
+    flex: 0 0 auto; /* Impedisce alle card di restringersi */
+    width: 65vw;    /* Dimensione della card */
+    max-width: 300px; 
+    scroll-snap-align: center;
+}
+#gigDiv h2:first-child {
+    height: 3rem;       /* Altezza fissa per due righe */
+    line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Taglia dopo la seconda riga */
+    -webkit-box-orient: vertical;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#gigDiv img {
+    width: 100%;
+    height: 350px;    /* Altezza fissa per dare l'effetto "poster" */
+    object-fit: cover; /* Ritaglia l'immagine senza deformarla */
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+@media screen and (min-width: 769px) {
+    body {
+        background: #f0f0f0; /* Sfondo esterno grigio */
+        display: flex;
+        justify-content: center;
+    }
+    
+    #main, #topbar {
+        width: 30vw; /* Larghezza tipo iPhone Pro Max */
+        height: 100vh;
+        position: relative;
+        background: white;
+        box-shadow: 0 0 50px rgba(0,0,0,0.1);
+        overflow-y: auto;
+    }
+    
+    #saluto {
+        margin-top: 10rem;
+    }
+    #topbar {
+        position: absolute!important; /* Non più fixed su tutto lo schermo */
+        width: 100%;
+        height:5vw;
+    }
+    #circle{
+        width: 10vw;
+        height: 10vw;
+    }
+}
