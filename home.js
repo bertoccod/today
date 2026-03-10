@@ -25,6 +25,11 @@ function attivaFrecce() {
     if (btnPrevAcc) btnPrevAcc.onclick = () => cambiaEvento(-1);
     if (btnNextAcc) btnNextAcc.onclick = () => cambiaEvento(1);
     
+    const btnPrevNati = document.getElementById("freccia_prev_nati");
+    const btnNextNati = document.getElementById("freccia_next_nati");
+    if (btnPrevNati) btnPrevNati.onclick = () => muovi_carosello_nati(-1);
+    if (btnNextNati) btnNextNati.onclick = () => muovi_carosello_nati(1);
+
     console.log("✅ Frecce collegate!");
 }
 
@@ -90,7 +95,7 @@ pillolaSapere(oggi_aa, oggi_mm, oggi_gg);
 topCanzoneItalia();
 ilCapolavoroDelGiorno();
 fotografiaIconica();
-//ilGiganteDelGiorno(oggi_gg, oggi_mm);
+ilGiganteDelGiorno(oggi_gg, oggi_mm);
 
 async function caricaMeteo() {
   if (navigator.geolocation) {
@@ -656,107 +661,79 @@ async function fotografiaIconica() {
   }
 }
 
-/*
+
 async function ilGiganteDelGiorno(gg, mm) {
-  const gigante_div = document.getElementById("compleanno");
-  const giorno = String(gg).padStart(2, '0');
-  const mese = String(mm).padStart(2, '0');
+  const el_lista_date = document.getElementById("lista_nati");
+  const chiaveOggi = `${String(mm).padStart(2, '0')}-${String(gg).padStart(2, '0')}`;
+
   try {
-    const response = await fetch(`https://en.wikipedia.org/api/rest_v1/feed/onthisday/births/${mese}/${giorno}`);
-    console.log(`https://en.wikipedia.org/api/rest_v1/feed/onthisday/births/${mese}/${giorno}`);
-    const data = await response.json();
-    if (!data.births) return;
+    const response = await fetch('./compleanni.json');
+    const database = await response.json();
+    const oggi = database.filter(p => p.data_chiave === chiaveOggi);
 
-    const gigantiPerDecennio = {};
-    data.births.forEach(p => {
-      const decennio = Math.floor(p.year / 10) * 10;
-      if (decennio >= 1900 && decennio <= 2020) {
-        const currentScore = (p.pages[0].thumbnail ? 300 : 0) +
-          (p.pages[0].extract ? p.pages[0].extract.length : 0) +
-          (p.pages[0].description ? p.pages[0].description.length : 0) +
-          (p.pages[0].description?.includes("Italian") ? 2600 : 0);
-        if (!gigantiPerDecennio[decennio] || currentScore > gigantiPerDecennio[decennio].score) {
-          gigantiPerDecennio[decennio] = { ...p, score: currentScore };
-        }
-      }
-    });
-    const listaFinale = Object.values(gigantiPerDecennio).sort((a, b) => a.year - b.year);
-    //EXTRACT IN ITALIANO
-    // --- STEP 1: RACCOLTA DEI QID ---
-    const qids = listaFinale.map(g => g.pages[0].wikibase_item).join('|');
+    // Resetta sempre il contenuto prima di iniziare il ciclo
+    el_lista_date.innerHTML = "";
 
-    try {
-      // --- STEP 2: CHIEDIAMO A WIKIDATA I TITOLI DELLE PAGINE ITALIANE ---
-      // Usiamo Wikidata per convertire i QID (es. Q447882) nei titoli reali di Wikipedia IT (es. "Sandro Pertini")
-      const urlWikidata = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qids}&props=sitelinks&sitefilter=itwiki&format=json&origin=*`;
-
-      const resWikidata = await fetch(urlWikidata);
-      const dataWikidata = await resWikidata.json();
-
-      // Creiamo una mappa per collegare QID -> Titolo Italiano
-      const mappaTitoli = {};
-      const titoliPerWikipedia = [];
-
-      for (const qid in dataWikidata.entities) {
-        const titleIt = dataWikidata.entities[qid].sitelinks?.itwiki?.title;
-        if (titleIt) {
-          mappaTitoli[titleIt] = qid; // Ci serve per riaccoppiarli dopo
-          titoliPerWikipedia.push(titleIt);
-        }
-      }
-
-      // --- STEP 3: CHIEDIAMO A WIKIPEDIA IT GLI EXTRACT (DESCRIZIONI) ---
-      // Ora che abbiamo i nomi "veri", chiediamo i testi in un colpo solo
-      const nomiStringa = titoliPerWikipedia.join('|');
-      // URL per descrizioni brevi (poche parole)
-      const urlWikiIT = `https://it.wikipedia.org/w/api.php?action=query&prop=pageterms&titles=${encodeURIComponent(nomiStringa)}&format=json&origin=*`;
-
-      const resWikiIT = await fetch(urlWikiIT);
-      const dataWikiIT = await resWikiIT.json();
-
-      const pagineIt = dataWikiIT.query.pages;
-
-      // --- STEP 4: ACCOPPIAMENTO E CREAZIONE HTML ---
-      const ulGig = document.createElement("ul");
-
-      for (const id in pagineIt) {
-        const p = pagineIt[id];
-        const qidCorrispondente = mappaTitoli[p.title];
-
-        // Troviamo l'oggetto originale nella lista per recuperare l'anno e la foto
-        const personaggioOriginale = listaFinale.find(g => g.pages[0].wikibase_item === qidCorrispondente);
-
-        if (personaggioOriginale) {
-          const descrizioneBreve = p.terms?.description?.[0] || "Personaggio storico";
-          const foto = personaggioOriginale.pages[0]?.thumbnail?.source || "assets/placeholder_gigante.jpg";
-          const annoNascita = personaggioOriginale.year;
-
-          // Creiamo la card
-          const liGig = document.createElement("li");
-          liGig.innerHTML = ` 
-                <div id="gigDiv">
-                    <h2>${p.title}</h2>
-                    <img src="${foto}" alt="${p.title}" />
-                    <div class="gig-info">
-                        <span class="gig-year">${annoNascita}</span>
-                        <p class="gig-desc">${descrizioneBreve}</p>
-                    </div>
-                </div>
-            `;
-          ulGig.appendChild(liGig);
-        }
-      }
-
-      // Aggiungiamo la lista al contenitore finale
-      gigante_div.innerHTML = "<h2>I GIGANTI NATI OGGI</h2>"; // Pulisce e mette il titolo
-      gigante_div.appendChild(ulGig);
-
-    } catch (error) {
-      console.error("Errore nell'ultimo miglio delle API:", error);
+    if (oggi.length === 0) {
+      el_lista_date.innerHTML = "<li><p style='text-align:center; padding:20px; width:100%'>Oggi festeggiamo solo te!</p></li>";
+      return;
     }
 
-  } catch (e) {
-    console.error("Errore:", e);
+    const nomiStringa = oggi.map(p => p.nome_wikipedia).join('|');
+    const urlWikiIT = `https://it.wikipedia.org/w/api.php?action=query&prop=pageimages|extracts|pageterms&exintro&explaintext&titles=${encodeURIComponent(nomiStringa)}&pithumbsize=400&format=json&origin=*`;
+
+    const resWiki = await fetch(urlWikiIT);
+    const dataWiki = await resWiki.json();
+    const pagineIt = dataWiki.query.pages;
+
+    oggi.forEach(persona => {
+  const paginaWiki = Object.values(pagineIt).find(p => p.title === persona.nome_wikipedia);
+
+  if (paginaWiki) {
+    const foto = paginaWiki.thumbnail ? paginaWiki.thumbnail.source : "assets/placeholder_gigante.png";
+    const descrizioneWiki = paginaWiki.terms?.description?.[0] || "Personaggio celebre";
+    
+    const annoCorrente = new Date().getFullYear();
+    const annoNascita = parseInt(persona.nascita);
+    const annoMorte = persona.morte ? parseInt(persona.morte) : null;
+    
+    let testoStato = annoMorte 
+      ? `Scomparso nel ${annoMorte} (${annoMorte - annoNascita} anni)` 
+      : `Oggi compie ${annoCorrente - annoNascita} anni!`;
+    
+    // Usiamo la classe 'deceduto' per il CSS specifico
+    const statoClasse = annoMorte ? "deceduto" : "vivente";
+
+    let el_lista_date_li = document.createElement("li");
+    el_lista_date_li.innerHTML = `
+      <div class="nato_box ${statoClasse}">
+        <div class="nato_media">
+          <img src="${foto}" alt="${paginaWiki.title}" />
+        </div>
+        <div class="nato_info">
+          <h2>${paginaWiki.title}</h2>
+          <span class="nato_year">${annoNascita}</span>
+          <p><b>${testoStato}</b></p>
+          <p class="nato_desc">${descrizioneWiki}</p>
+        </div>
+      </div>
+    `;
+    el_lista_date.appendChild(el_lista_date_li);
+  }
+});
+  } catch (error) {
+    console.error("Errore nel caricamento dei Giganti:", error);
+    el_lista_date.innerHTML = "<li>Impossibile caricare i giganti.</li>";
   }
 }
-*/
+
+function muovi_carosello_nati(dato_direzione) {
+  const el_lista_nati = document.getElementById("lista_nati");
+  const el_card = el_lista_nati.querySelector("li");
+  if (el_card) {
+    const dato_larghezza = el_card.offsetWidth;
+    const dato_gap = 15;
+    const dato_spostamento = (dato_larghezza + dato_gap) * dato_direzione;
+    el_lista_nati.scrollBy({ left: dato_spostamento, behavior: "smooth" });
+  }
+}

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="home.css">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="./assets/icon-192.png">
 </head>
@@ -100,7 +100,21 @@
         </div>
       </div>
     </div>
-
+    <div class="boxino"  id="nati_di_oggi">
+      <div class="etichetta">
+        <h2>I nati di oggi</h2>
+      </div>
+      <div id="carosello_nati">
+        <div id="freccia_prev_nati" class="indicatore_scroll">
+          <i class="ph-bold ph-caret-left"></i>
+        </div>
+        <ul id="lista_nati">
+        </ul>
+        <div id="freccia_next_nati" class="indicatore_scroll">
+          <i class="ph-bold ph-caret-right"></i>
+        </div>
+      </div>
+    </div>
     <div class="boxino">
       <div class="etichetta">
         <h2>Accadde oggi</h2>
@@ -145,12 +159,14 @@
       </div>
       <div id="fotografia_box"></div>
     </div>
-    
     <!--
-    <div id="compleanno" class="boxino">
-      <h2>I NATI DI OGGI</h2>
+    <div class="boxino" id="nati_di_oggi">
+      <div class="etichetta">
+        <h2>I nati di oggi</h2>
+      </div>
+      <div id="giganti_box"></div>
     </div>
-    -->
+  -->
 
   </div>
   <script type="module" src="home.js"></script>
