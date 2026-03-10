@@ -1,4 +1,4 @@
-const CACHE_NAME = 'today-v1.6'; // Incrementato a 1.6 per forzare l'aggiornamento
+const CACHE_NAME = 'today-v1.7'; // Incrementato a 1.6 per forzare l'aggiornamento
 
 const FILES_TO_CACHE = [
   './',
