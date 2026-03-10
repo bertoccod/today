@@ -1,19 +1,19 @@
-const CACHE_NAME = 'v1.2';
+const CACHE_NAME = 'v1.3';
 const FILES_TO_CACHE = [
-  '',               
-  'index.html',
-  'home.html',
-  'index.css',
-  'home.css',
-  'theme.css',
-  'index.js',
-  'home.js',
-  'manifest.json',
-  'assets/icon-192.png',
-  'assets/icon-512.png',
-  'assets/placeholder-musica.png',
-  'assets/logo_orizz.png' 
+  './',
+  './index.html',
+  './index.css',
+  './index.js',
+  './home.html',
+  './home.css',
+  './home.js',
+  './theme.css',
+  './assets/icon-192.png',
+  './assets/icon-512.png',
+  './assets/placeholder-musica.png',
+  './assets/logo_orizz.png' 
 ];
+
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keyList => {
