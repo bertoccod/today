@@ -1,18 +1,32 @@
-const CACHE_NAME = 'v1.1';
+const CACHE_NAME = 'v1.2';
 const FILES_TO_CACHE = [
-  './',
-  './index.html',
-  './index.css',
-  './index.js',
-  './home.html',
-  './home.css',
-  './home.js',
-  './theme.css',
-  './manifest.json',
-  './assets/icon-192.png',
-  './assets/icon-512.png',
-  './assets/placeholder-musica.png'
+  '',               
+  'index.html',
+  'home.html',
+  'index.css',
+  'home.css',
+  'theme.css',
+  'index.js',
+  'home.js',
+  'manifest.json',
+  'assets/icon-192.png',
+  'assets/icon-512.png',
+  'assets/placeholder-musica.png',
+  'assets/logo_orizz.png' 
 ];
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keyList => {
+      return Promise.all(keyList.map(key => {
+        if (key !== CACHE_NAME) {
+          console.log('Rimozione vecchia cache:', key);
+          return caches.delete(key);
+        }
+      }));
+    })
+  );
+  return self.clients.claim();
+});
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -23,6 +37,10 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+  if (event.request.url.includes('firestore') || event.request.url.includes('google')) {
+    return; 
+  }
+
   event.respondWith(
     fetch(event.request).catch(() => {
       return caches.match(event.request);
