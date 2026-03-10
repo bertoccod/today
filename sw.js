@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v1.4';
+const CACHE_NAME = 'today-v1.5'; // Cambia versione per pulire tutto
 const FILES_TO_CACHE = [
   './',
   './index.html',
@@ -8,25 +8,12 @@ const FILES_TO_CACHE = [
   './home.css',
   './home.js',
   './theme.css',
+  './manifest.json',
   './assets/icon-192.png',
   './assets/icon-512.png',
   './assets/placeholder-musica.png',
-  './assets/logo_orizz.png' 
+  './assets/logo_orizz.png'
 ];
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keyList => {
-      return Promise.all(keyList.map(key => {
-        if (key !== CACHE_NAME) {
-          console.log('Rimozione vecchia cache:', key);
-          return caches.delete(key);
-        }
-      }));
-    })
-  );
-  return self.clients.claim();
-});
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -34,16 +21,20 @@ self.addEventListener('install', event => {
       return cache.addAll(FILES_TO_CACHE);
     })
   );
+  self.skipWaiting();
 });
 
+// Usa la logica dell'app che FUNZIONA (Cache-first)
 self.addEventListener('fetch', event => {
+  // Escludi Firebase e API di Google dal controllo della cache
   if (event.request.url.includes('firestore') || event.request.url.includes('google')) {
     return; 
   }
 
   event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
+    caches.match(event.request).then(response => {
+      // Se è in cache, dalli subito, altrimenti vai in rete
+      return response || fetch(event.request);
     })
   );
 });
