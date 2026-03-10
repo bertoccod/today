@@ -6,6 +6,43 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// Logica per il pulsante di installazione PWA
+let deferredPrompt;
+const installBanner = document.getElementById('pwa-install-banner');
+const installBtn = document.getElementById('pwa-install-btn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Previene la comparsa automatica del banner di Chrome
+  e.preventDefault();
+  // Salva l'evento per usarlo dopo
+  deferredPrompt = e;
+  // Mostra il nostro banner personalizzato
+  installBanner.style.display = 'block';
+  console.log("Evento 'beforeinstallprompt' intercettato!");
+});
+
+installBtn.addEventListener('click', async () => {
+  if (deferredPrompt) {
+    // Mostra il prompt di installazione nativo
+    deferredPrompt.prompt();
+    // Attendi la risposta dell'utente
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`Risultato installazione: ${outcome}`);
+    // Pulizia
+    deferredPrompt = null;
+    installBanner.style.display = 'none';
+  }
+});
+
+// Nascondi il banner se l'app viene installata con successo
+window.addEventListener('appinstalled', () => {
+  installBanner.style.display = 'none';
+  deferredPrompt = null;
+  console.log('App installata correttamente!');
+});
+
+
+
 let yourname = localStorage.getItem("username");
 
 //CARICO IL DOM
