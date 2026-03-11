@@ -14,6 +14,84 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// --- 1. REFRESH INTELLIGENTE (4 ORE O CAMBIO GIORNO) ---
+let timestampSospensione = Date.now();
+let giornoAlCaricamento = new Date().getDate();
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+        timestampSospensione = Date.now();
+    } else if (document.visibilityState === "visible") {
+        const oraRiapertura = Date.now();
+        const oggi = new Date().getDate();
+        const millisecondiTrascorsi = oraRiapertura - timestampSospensione;
+        const limiteQuattroOre = 4 * 60 * 60 * 1000;
+
+        if (millisecondiTrascorsi > limiteQuattroOre || oggi !== giornoAlCaricamento) {
+            window.location.reload();
+        }
+    }
+});
+
+// --- 2. GESTIONE INSTALLAZIONE APP ---
+let deferredPrompt = null; // Inizializza a null
+const el_pwa_install_btn = document.getElementById("pwa-install-btn");
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+// 1. Ascoltatore globale (deve essere fuori da ogni IF)
+window.addEventListener('beforeinstallprompt', (e) => {
+    console.log("✅ Evento beforeinstallprompt intercettato!");
+    e.preventDefault();
+    deferredPrompt = e; // Salva l'evento
+
+    // Mostra il pulsante solo se necessario
+    if (!isStandalone && !isIOS && el_pwa_install_btn) {
+        el_pwa_install_btn.style.display = 'block';
+    }
+});
+
+// 2. Gestione Logica UI
+if (!isStandalone) {
+    if (isIOS) {
+        if (el_pwa_install_btn) {
+            el_pwa_install_btn.style.display = 'block';
+            el_pwa_install_btn.addEventListener('click', () => {
+                alert("Per installare Today! su iPhone:\n\n1. Premi l'icona 'Condividi'...\n2. Scegli 'Aggiungi alla schermata Home' 📲");
+            });
+        }
+    } else {
+        // Logica per Android/Desktop
+        if (el_pwa_install_btn) {
+            el_pwa_install_btn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    if (outcome === 'accepted') {
+                        el_pwa_install_btn.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                } else {
+                    // Se l'evento non è ancora arrivato, diamo un feedback ma non blocchiamo
+                    console.log("Attesa dell'evento di installazione dal browser...");
+                    alert("Il browser sta preparando l'installazione. Riprova tra un istante o interagisci con la pagina.");
+                }
+            });
+        }
+    }
+}
+
+// 3. Listener per quando l'app viene effettivamente installata (nasconde il tasto)
+window.addEventListener('appinstalled', () => {
+    console.log('PWA installata con successo');
+    if (el_pwa_install_btn) el_pwa_install_btn.style.display = 'none';
+    deferredPrompt = null;
+});
+
+
+
+
 function attivaFrecce() {
     const btnPrev = document.getElementById("freccia_prev");
     const btnNext = document.getElementById("freccia_next");
@@ -35,20 +113,25 @@ function attivaFrecce() {
 
 attivaFrecce();
 
-//CONTROLLO ESISTA IL NOME E LA DATA DI NASCITA
+// --- 3. CONTROLLO SESSIONE E LOG ---
 let nome = localStorage.getItem("username");
 let dato_nascita = localStorage.getItem("data");
-if (!nome) { window.location.href = "index.html"; }
 
-//LOG DI ACCESSO
-try {
-  await addDoc(collection(db, "log"), {
-    nome: nome,
-    data: serverTimestamp()
-  });
-  console.log("Nuovo log di accesso creato");
-} catch (e) {
-  console.error("Errore: ", e);
+if (!nome) { 
+    window.location.href = "index.html"; 
+} else {
+    // Funzione asincrona per il log per non bloccare il caricamento della pagina
+    (async () => {
+        try {
+            await addDoc(collection(db, "log"), {
+                nome: nome,
+                data: serverTimestamp()
+            });
+            console.log("✅ Log accesso registrato");
+        } catch (e) {
+            console.error("❌ Errore Log: ", e);
+        }
+    })();
 }
 
 //CAPTO ORA E DATA ODIERNA
@@ -181,6 +264,7 @@ async function caricaMeteo() {
         el_meteo_contenuto.textContent = "Meteo non disponibile";
       }
     }, (error) => {
+      const el_meteo_contenuto = document.getElementById("meteo_contenuto");
       el_meteo_contenuto.textContent = "Permesso negato o errore GPS";
       console.error(error);
     });

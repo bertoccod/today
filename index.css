@@ -119,6 +119,42 @@
   height: 1px;
   background: var(--accent);
 }
+#pwa-install-banner{
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 400px;
+  background: var(--card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--accent);
+  padding: 15px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  z-index: 9999;
+  text-align: center;
+}
+#install-message{
+  margin: 0 0 10px 0;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  color: var(--text-day);
+}
+#pwa-install-btn{
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-family: var(--font-titles);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  width: 100%;
+}
 
 @media screen and (min-width: 769px) {
   body {

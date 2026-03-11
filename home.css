@@ -16,15 +16,31 @@
   backdrop-filter: blur(12px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   display: flex;
-  align-items: center;
+  align-items:center;
+  justify-items: flex-end;
   padding: 0 1.2rem;
   z-index: 10;
+  gap: 40px;
 }
 
 #logo_img {
   height: 50px;
   width: auto;
   filter: drop-shadow(0 0 6px white);
+}
+
+#pwa-install-btn{
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 5px 7px;
+  border-radius: 12px;
+  font-family: var(--font-titles);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.65rem;
+  cursor: pointer;
+  
 }
 
 /* SALUTO INIZIALE*/ 

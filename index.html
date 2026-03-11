@@ -15,12 +15,15 @@
 
 <body>
   <div id="main">
+    <!-- DESKTOP DISCLAIMER-->
     <div id="desktop">
       <span>
         <b>"Prenditi un momento, ma sul palmo della tua mano."</b><br>
         Today è nato per essere un piccolo rito quotidiano, veloce e personale. Su uno schermo così grande perde la sua magia. Apri l'indirizzo dal tuo smartphone per iniziare la giornata nel modo giusto.
       </span>
     </div>
+    
+    <!-- LOGO E FORM DI LOGIN-->
     <div id="logo">
       <img id="logo_img" src="assets/logo.png" alt="Logo Today" />
     </div>
@@ -40,21 +43,20 @@
       <p><b>Attenzione:</b><br>Eliminando la cache del browser potresti dover reinserire questi dati.</p>
     </div>
 
-    <div id="splash" style="display: none;"></div>
-    
-    <div id="pwa-install-banner" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: var(--card); backdrop-filter: blur(20px); border: 1px solid var(--accent); padding: 15px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 9999; text-align: center;">
-      <p style="margin: 0 0 10px 0; font-family: var(--font-main); font-size: 0.9rem; color: var(--text-day);">Aggiungi <b>Today!</b> alla tua home per un accesso rapido.</p>
-      <button id="pwa-install-btn" style="background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-family: var(--font-titles); text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; cursor: pointer; width: 100%;">Installa App</button>
+    <!-- BANNER INSTALLAZIONE-->
+    <div id="pwa-install-banner">
+      <p id="install-message"></p>
+      <button id="pwa-install-btn">Installa App</button>
     </div>
 
+    <!-- SPLASH SCREEN -->
+    <div id="splash" style="display: none;"></div>
 </div>
   </div>
     <script src="index.js"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-  // I tuoi dati di configurazione (li trovi nelle impostazioni del progetto Firebase)
   const firebaseConfig = {
       apiKey: "AIzaSyCboHhYcYQKR8MuB41r4d5QRqPpiT0_v5w",
       authDomain: "today-7ee7d.firebaseapp.com",
@@ -63,12 +65,8 @@
       messagingSenderId: "628567408302",
       appId: "1:628567408302:web:71598097228eb34fcf373f"
     };
-
-  // Inizializza Firebase
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-
-  // Rendiamo la funzione disponibile globalmente per il tuo pulsante
   window.registraAccesso = async function(nome, data) {
     try {
       const docRef = await addDoc(collection(db, "accessi_utenti"), {

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'today-v1.7'; // Incrementato a 1.6 per forzare l'aggiornamento
+const CACHE_NAME = 'today-v1.8'; 
 
 const FILES_TO_CACHE = [
   './',
@@ -14,8 +14,9 @@ const FILES_TO_CACHE = [
   './assets/icon-192.png',
   './assets/icon-512.png',
   './assets/placeholder-musica.png',
-  './assets/placeholder_gigante.jpg', // Corretto in .jpg come da discussione
-  './assets/logo_orizz.png'
+  './assets/placeholder_gigante.png', 
+  './assets/logo_orizz.png',
+  './assets/ios-share-icon.png'
 ];
 
 // 1. INSTALLAZIONE: Crea la cache e scarica i file
@@ -47,7 +48,6 @@ self.addEventListener('activate', event => {
 
 // 3. FETCH: Strategia Stale-While-Revalidate
 self.addEventListener('fetch', event => {
-  // Escludi chiamate esterne dinamiche (Firebase, API Google, Wikipedia)
   if (
     event.request.url.includes('firestore') || 
     event.request.url.includes('google') || 
@@ -56,24 +56,20 @@ self.addEventListener('fetch', event => {
     event.request.url.includes('artic.edu') ||
     event.request.url.includes('audioscrobbler.com')
   ) {
-    return; // Lascia che il browser gestisca queste chiamate normalmente
+    return;
   }
 
   event.respondWith(
     caches.open(CACHE_NAME).then(cache => {
       return cache.match(event.request).then(cachedResponse => {
         const fetchPromise = fetch(event.request).then(networkResponse => {
-          // Se la risposta è valida, salva una copia aggiornata nella cache
           if (networkResponse && networkResponse.status === 200) {
             cache.put(event.request, networkResponse.clone());
           }
           return networkResponse;
         }).catch(() => {
-          // Se la rete fallisce e non c'è cache, puoi gestire l'errore qui
           return cachedResponse;
         });
-
-        // Ritorna subito la versione in cache (se esiste), altrimenti aspetta la rete
         return cachedResponse || fetchPromise;
       });
     })
