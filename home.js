@@ -34,62 +34,79 @@ document.addEventListener("visibilitychange", () => {
 });
 
 // --- 2. GESTIONE INSTALLAZIONE APP ---
-let deferredPrompt = null; // Inizializza a null
+let deferredPrompt = null;
 const el_pwa_install_btn = document.getElementById("pwa-install-btn");
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
-// 1. Ascoltatore globale (deve essere fuori da ogni IF)
+// Funzione per verificare se siamo già dentro l'app (Standalone)
+const checkIsStandalone = () => {
+    return window.matchMedia('(display-mode: standalone)').matches || 
+           window.navigator.standalone === true ||
+           document.referrer.includes('android-app://');
+};
+
+// 1. NASCONDI SUBITO SE STANDALONE
+// Se siamo già nell'app, il tasto non deve MAI apparire
+if (checkIsStandalone()) {
+    if (el_pwa_install_btn) el_pwa_install_btn.style.display = 'none';
+}
+
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+// 2. Ascoltatore EVENTO (Android / Desktop)
 window.addEventListener('beforeinstallprompt', (e) => {
+    // Se siamo già in standalone, ignoriamo l'evento e teniamo spento il tasto
+    if (checkIsStandalone()) {
+        if (el_pwa_install_btn) el_pwa_install_btn.style.display = 'none';
+        return;
+    }
+
     console.log("✅ Evento beforeinstallprompt intercettato!");
     e.preventDefault();
-    deferredPrompt = e; // Salva l'evento
+    deferredPrompt = e; 
 
-    // Mostra il pulsante solo se necessario
-    if (!isStandalone && !isIOS && el_pwa_install_btn) {
+    // Mostra il pulsante (Solo se non siamo su iOS, che ha la sua logica sotto)
+    if (!isIOS && el_pwa_install_btn) {
         el_pwa_install_btn.style.display = 'block';
     }
 });
 
-// 2. Gestione Logica UI
-if (!isStandalone) {
+// 3. Gestione Logica UI (iOS e Click)
+if (!checkIsStandalone()) {
     if (isIOS) {
+        // Su iOS non c'è beforeinstallprompt, mostriamo il tasto istruzioni
         if (el_pwa_install_btn) {
             el_pwa_install_btn.style.display = 'block';
-            el_pwa_install_btn.addEventListener('click', () => {
-                alert("Per installare Today! su iPhone:\n\n1. Premi l'icona 'Condividi'...\n2. Scegli 'Aggiungi alla schermata Home' 📲");
-            });
+            el_pwa_install_btn.onclick = () => {
+                alert("Per installare Today! su iPhone:\n\n1. Premi l'icona 'Condividi' (quadrato con freccia su)\n2. Scorri verso il basso\n3. Scegli 'Aggiungi alla schermata Home' 📲");
+            };
         }
     } else {
-        // Logica per Android/Desktop
+        // Gestione Click per Android/Desktop
         if (el_pwa_install_btn) {
-            el_pwa_install_btn.addEventListener('click', async () => {
+            el_pwa_install_btn.onclick = async () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
                     const { outcome } = await deferredPrompt.userChoice;
-                    console.log(`User response to the install prompt: ${outcome}`);
+                    console.log(`User response: ${outcome}`);
                     if (outcome === 'accepted') {
                         el_pwa_install_btn.style.display = 'none';
+                        deferredPrompt = null;
                     }
-                    deferredPrompt = null;
                 } else {
-                    // Se l'evento non è ancora arrivato, diamo un feedback ma non blocchiamo
-                    console.log("Attesa dell'evento di installazione dal browser...");
-                    alert("Il browser sta preparando l'installazione. Riprova tra un istante o interagisci con la pagina.");
+                    console.log("Prompt non ancora disponibile");
+                    alert("Il browser sta preparando l'installazione. Riprova tra un istante.");
                 }
-            });
+            };
         }
     }
 }
 
-// 3. Listener per quando l'app viene effettivamente installata (nasconde il tasto)
+// 4. Listener di sicurezza finale
 window.addEventListener('appinstalled', () => {
-    console.log('PWA installata con successo');
+    console.log('✅ PWA installata con successo');
     if (el_pwa_install_btn) el_pwa_install_btn.style.display = 'none';
     deferredPrompt = null;
 });
-
-
 
 
 function attivaFrecce() {
