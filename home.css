@@ -426,6 +426,16 @@
   border-radius: 8px;
   margin-right: 1rem;
 }
+.nato_link {
+    text-decoration: none;
+    color: inherit; 
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.nato_link:active {
+    transform: scale(0.98); /* Leggero feedback al click */
+}
 .nato_box {
     display: flex;
     flex-direction: row; /* Foto a lato del testo */
@@ -433,6 +443,7 @@
     justify-content: center; /* Centra il gruppo immagine+testo */
     gap: 1.5rem;
     width: 100%;
+    cursor: pointer;
 }
 
 .nato_info {

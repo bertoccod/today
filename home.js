@@ -724,15 +724,49 @@ async function ilCapolavoroDelGiorno() {
     const imageUrl = `https://www.artic.edu/iiif/2/${opera.image_id}/full/843,/0/default.jpg`;
 
     el_capolavoro_box.innerHTML = `
-        <img src="${imageUrl}" alt="${opera.title}">
+        <img src="${imageUrl}" alt="${opera.title}" class="zoomable_art" id="art_image">
         <h2>${opera.title}</h2>
         <p >${opera.artist_display}</p>
     `;
-
+    const imgElement = document.getElementById("art_image");
+    if (imgElement) {
+        imgElement.onclick = function() {
+            apriFullScreen(imageUrl, opera.title);
+        };
+    }
   } catch (error) {
     console.error("Errore Arte API:", error);
     el_capolavoro_box.innerHTML = "<p>L'arte oggi è timida.</p>";
   }
+}
+
+function apriFullScreen(url, titolo) {
+    let overlay = document.getElementById("art_full_screen");
+    
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "art_full_screen";
+        // Importante: aggiungi il CSS inline se non l'hai messo nel file .css
+        overlay.style.cssText = "display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center; flex-direction:column; color:white;";
+        
+        overlay.innerHTML = `
+            <span style="position:absolute; top:20px; right:30px; font-size:40px; cursor:pointer;">&times;</span>
+            <img id="full_img" style="max-width:90%; max-height:80vh; object-fit:contain; border:2px solid white;">
+            <p id="full_title" style="margin-top:20px; font-style:italic; text-align:center; padding:0 10px;"></p>
+        `;
+        document.body.appendChild(overlay);
+        
+        overlay.onclick = () => { overlay.style.display = "none"; };
+    }
+
+    const fullImg = document.getElementById("full_img");
+    const fullTitle = document.getElementById("full_title");
+
+    fullImg.src = url.replace("843,", "full");
+    fullTitle.innerText = titolo;
+    
+    // Il momento della verità: forziamo il display a flex
+    overlay.style.display = "flex";
 }
 
 
@@ -752,9 +786,15 @@ async function fotografiaIconica() {
     if (!foto) throw new Error("Foto non disponibile");
 
     el_fotografia_box.innerHTML = `
-        <img src="${foto.thumbnail.source}">
+        <img src="${foto.thumbnail.source}" class="zoomable_art" id="photo_image">
         <p>${foto.description.text}</p>
     `;
+     const imgElement2 = document.getElementById("photo_image");
+    if (imgElement2) {
+        imgElement2.onclick = function() {
+            apriFullScreen(foto.thumbnail.source, foto.description.text);
+        };
+    }
 
   } catch (error) {
     console.error("Errore Foto:", error);
@@ -788,39 +828,43 @@ async function ilGiganteDelGiorno(gg, mm) {
     const pagineIt = dataWiki.query.pages;
 
     oggi.forEach(persona => {
-  const paginaWiki = Object.values(pagineIt).find(p => p.title === persona.nome_wikipedia);
+      const paginaWiki = Object.values(pagineIt).find(p => p.title === persona.nome_wikipedia);
 
-  if (paginaWiki) {
-    const foto = paginaWiki.thumbnail ? paginaWiki.thumbnail.source : "assets/placeholder_gigante.png";
-    const descrizioneWiki = paginaWiki.terms?.description?.[0] || "Personaggio celebre";
-    
-    const annoCorrente = new Date().getFullYear();
-    const annoNascita = parseInt(persona.nascita);
-    const annoMorte = persona.morte ? parseInt(persona.morte) : null;
-    
-    let testoStato = annoMorte 
-      ? `Scomparso nel ${annoMorte} (${annoMorte - annoNascita} anni)` 
-      : `Oggi compie ${annoCorrente - annoNascita} anni!`;
-    
-    // Usiamo la classe 'deceduto' per il CSS specifico
-    const statoClasse = annoMorte ? "deceduto" : "vivente";
+      if (paginaWiki) {
 
-    let el_lista_date_li = document.createElement("li");
-    el_lista_date_li.innerHTML = `
-      <div class="nato_box ${statoClasse}">
-        <div class="nato_media">
-          <img src="${foto}" alt="${paginaWiki.title}" />
-        </div>
-        <div class="nato_info">
-          <h2>${paginaWiki.title}</h2>
-          <span class="nato_year">${annoNascita}</span>
-          <p><b>${testoStato}</b></p>
-          <p class="nato_desc">${descrizioneWiki}</p>
-        </div>
-      </div>
-    `;
-    el_lista_date.appendChild(el_lista_date_li);
-  }
+        const foto = paginaWiki.thumbnail ? paginaWiki.thumbnail.source : "assets/placeholder_gigante.png";
+        const descrizioneWiki = paginaWiki.terms?.description?.[0] || "Personaggio celebre";
+        
+        const annoCorrente = new Date().getFullYear();
+        const annoNascita = parseInt(persona.nascita);
+        const annoMorte = persona.morte ? parseInt(persona.morte) : null;
+        
+        let testoStato = annoMorte 
+          ? `Scomparso nel ${annoMorte} (${annoMorte - annoNascita} anni)` 
+          : `Oggi compie ${annoCorrente - annoNascita} anni!`;
+        
+        // Usiamo la classe 'deceduto' per il CSS specifico
+        const statoClasse = annoMorte ? "deceduto" : "vivente";
+        const linkWikipedia = `https://it.wikipedia.org/wiki/${encodeURIComponent(persona.nome_wikipedia)}`;
+
+        let el_lista_date_li = document.createElement("li");
+        el_lista_date_li.innerHTML = `
+          <a href="${linkWikipedia}" target="_blank" rel="noopener" class="nato_link">
+            <div class="nato_box ${statoClasse}">
+              <div class="nato_media">
+                <img src="${foto}" alt="${paginaWiki.title}" />
+              </div>
+              <div class="nato_info">
+                <h2>${paginaWiki.title}</h2>
+                <span class="nato_year">${annoNascita}</span>
+                <p><b>${testoStato}</b></p>
+                <p class="nato_desc">${descrizioneWiki}</p>
+              </div>
+            </div>
+          </a>
+        `;
+        el_lista_date.appendChild(el_lista_date_li);
+      }
 });
   } catch (error) {
     console.error("Errore nel caricamento dei Giganti:", error);
